@@ -18,13 +18,38 @@ The Clarifai-Android-SDK is available via *TODO: fill in how it's available and 
 >
 >If you don't have it installed yet, you can find details at: [https://git-lfs.github.com](https://git-lfs.github.com)
 
-*TODO: Installation instructions*
+## Install the SDK manually with an `*.aar`
+
+To install the SDK using an `*.aar` file, place the `*.aar` file into the `/app/libs` folder of your application. In the app-level `build.gradle` file, add the following code block:
+
+```
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+```
+
+Finally include the SDK as a dependency:
+
+```
+dependencies {
+    ...
+    implementation 'com.clarifai.sdk:SDK_FILE_NAME@aar'
+    ...
+}
+```
+replacing `SDK_FILE_NAME`, with the name of the library added to the `/app/libs` folder in the previous step. The Example folder demonstrates what this should look like, however you will still need to place a copy of the SDK in the `Example/Neutron/app/libs` folder. Note, the Neutron app is designed around a specific version of the SDK (listed in the app-level `build.gradle`), and the matching version should be used.
+
+## Install the SDK from central repository
+
+Coming soon...
 
 ## Start the SDK
 
 The Clarifai SDK is initialized by calling  `Clarifai.start(applicationContext, apiKey);` within the `com.clarifai.clarifai_android_sdk.core.Clarifai` package. We recommend starting it when your app has finished launching, but that is not absolutely required. Furthermore, work is offloaded to background threads, so there should be little to no impact on the launching of your app.
 
-```
+```java
 import com.clarifai.clarifai_android_sdk.core.Clarifai;
 
 public class MainActivity extends AppCompatActivity {

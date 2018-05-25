@@ -7,6 +7,6 @@
     <string name="general_model">General</string>
     <string name="custom_model">Custom</string>
     <string name="predict">Predict</string>
-    <string name="image_content_description">Sample image for preiction</string>
+    <string name="image_content_description">Sample image for prediction</string>
     <string name="apiKey">ENTER YOUR API KEY</string>
 </resources>

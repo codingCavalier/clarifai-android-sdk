@@ -1,0 +1,1 @@
+SDK aar should go in this folder, but will not be checked in with git.

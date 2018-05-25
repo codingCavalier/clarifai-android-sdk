@@ -21,17 +21,20 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.clarifai.clarifai_android_sdk.core.Constants;
 import com.clarifai.clarifai_android_sdk.dataassets.DataAsset;
 import com.clarifai.clarifai_android_sdk.dataassets.Image;
 import com.clarifai.clarifai_android_sdk.datamodels.Concept;
 import com.clarifai.clarifai_android_sdk.datamodels.Input;
 import com.clarifai.clarifai_android_sdk.datamodels.Model;
 import com.clarifai.clarifai_android_sdk.datamodels.Output;
+import com.clarifai.clarifai_android_sdk.utils.Error;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * PredictFragment.java
@@ -56,8 +59,6 @@ public class PredictFragment extends Fragment {
 
     List<Concept> concepts;
     Model model;
-    ConditionVariable modelLoaded = new ConditionVariable();
-
 
     private static class LoadModel extends AsyncTask<Void, Void, Boolean> {
         private WeakReference<PredictFragment> fragmentReference;
@@ -82,11 +83,10 @@ public class PredictFragment extends Fragment {
                 return false;
             }
             if (fragment.model != null) {
-                fragment.modelLoaded.close();
                 fragment.model.delete();
                 fragment.model = null;
             }
-            fragment.model = new Model("aaa03c23b3724a16a56b629203edc62c", "General");
+            fragment.model = new Model(Constants.GeneralModelVersion, "General");
             return true;
         }
 
@@ -97,7 +97,7 @@ public class PredictFragment extends Fragment {
                 return;
             }
             if (modelLoaded) {
-                fragment.modelLoaded.open();
+                fragment.predictButton.setEnabled(true);
                 fragment.statusText.setText("Model loaded!");
             } else {
                 fragment.statusText.setText("Model failed to load!");
@@ -105,80 +105,6 @@ public class PredictFragment extends Fragment {
         }
     }
 
-    private static class PredictOnModel extends AsyncTask<Void, Void, Void> {
-        private WeakReference<PredictFragment> fragmentReference;
-
-        PredictOnModel(PredictFragment context) {
-            fragmentReference = new WeakReference<>(context);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            final PredictFragment fragment = fragmentReference.get();
-            if (fragment == null || fragment.isRemoving()) {
-                return;
-            }
-            fragment.linearLayoutConcepts.setVisibility(View.GONE);
-            fragment.linearLayoutScores.setVisibility(View.GONE);
-            fragment.progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            final PredictFragment fragment = fragmentReference.get();
-            if (fragment == null || fragment.isRemoving()) {
-                return null;
-            }
-            Activity fragmentActivity = fragment.getActivity();
-            if (fragmentActivity == null || fragmentActivity.isFinishing()) {
-                return null;
-            }
-            fragment.modelLoaded.block(); // wait for model to finish loading
-            Image image = new Image(((BitmapDrawable)fragment.imageView.getDrawable()).getBitmap());
-
-            DataAsset dataAsset = new DataAsset(image);
-
-            Input input = new Input(dataAsset);
-            List<Input> inputs = new ArrayList<>();
-            inputs.add(input);
-
-            fragment.model.setInputs(inputs);
-
-            fragmentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    fragment.statusText.setText("Prediction starting...");
-                }
-            });
-            fragment.model.predict();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            final PredictFragment fragment = fragmentReference.get();
-            if (fragment == null || fragment.isRemoving()) {
-                return;
-            }
-            fragment.statusText.setText("Prediction finished!");
-            fragment.progressBar.setVisibility(View.GONE);
-            fragment.linearLayoutConcepts.setVisibility(View.VISIBLE);
-            fragment.linearLayoutScores.setVisibility(View.VISIBLE);
-
-            List<Output> outputs = fragment.model.getOutputs();
-            fragment.concepts.clear();
-            Output output = outputs.get(0);
-            DataAsset dataAsset = output.getDataAsset();
-            List<Concept> concepts = dataAsset.getConcepts();
-            if (concepts == null) {
-                Log.e(TAG, "No concepts were gotten during prediction!");
-                concepts = new ArrayList<>();
-            }
-            fragment.concepts.addAll(concepts);
-
-            fragment.addConceptsToTableView();
-        }
-    }
 
     public PredictFragment() {
         // required empty default constructor
@@ -214,19 +140,71 @@ public class PredictFragment extends Fragment {
                 doPrediction();
             }
         });
+        predictButton.setEnabled(false);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         if (model != null) {
-            modelLoaded.close();
             model.delete();
         }
     }
 
     private void doPrediction() {
-        new PredictOnModel(this).execute();
+        this.linearLayoutConcepts.setVisibility(View.GONE);
+        this.linearLayoutScores.setVisibility(View.GONE);
+        this.progressBar.setVisibility(View.VISIBLE);
+        this.predictButton.setEnabled(false);
+
+        Image image = new Image(((BitmapDrawable)
+        this.imageView.getDrawable()).getBitmap());
+
+        DataAsset dataAsset = new DataAsset(image);
+
+        Input input = new Input(dataAsset);
+        List<Input> inputs = new ArrayList<>();
+        inputs.add(input);
+
+        this.model.setInputs(inputs);
+
+        this.statusText.setText("Prediction starting...");
+        this.model.predict(new Model.ModelCallbacks() {
+            @Override
+            public void PredictionComplete(final boolean successful, final Error error) {
+                Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        finishPrediction(successful, error);
+                    }
+                });
+            }
+        });
+    }
+
+    private void finishPrediction(boolean successful, Error error) {
+        this.progressBar.setVisibility(View.GONE);
+        this.predictButton.setEnabled(true);
+        if (successful) {
+            this.statusText.setText("Prediction finished!");
+            this.linearLayoutConcepts.setVisibility(View.VISIBLE);
+            this.linearLayoutScores.setVisibility(View.VISIBLE);
+
+            List<Output> outputs = this.model.getOutputs();
+            this.concepts.clear();
+            Output output = outputs.get(0);
+            DataAsset dataAsset = output.getDataAsset();
+            List<Concept> concepts = dataAsset.getConcepts();
+            if (concepts == null) {
+                Log.e(TAG, "No concepts were gotten during prediction!");
+                concepts = new ArrayList<>();
+            }
+            this.concepts.addAll(concepts);
+
+            this.addConceptsToTableView();
+        } else {
+            this.statusText.setText("Prediction failed: " + error.getErrorMessage());
+        }
     }
 
 
