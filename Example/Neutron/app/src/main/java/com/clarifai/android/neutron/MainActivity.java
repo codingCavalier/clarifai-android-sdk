@@ -21,19 +21,17 @@ import com.clarifai.clarifai_android_sdk.utils.App;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "Neutron";
-    private String apiKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        apiKey = getString(R.string.apiKey);
+        String apiKey = getString(R.string.api_key);
         if (apiKey.equals("ENTER YOUR API KEY")) {
             Toast.makeText(this, "No valid API key was given!", Toast.LENGTH_LONG).show();
             Log.e(TAG, "No valid API key was given!");
         } else {
-            App.setContext(getApplicationContext());
             Clarifai.start(getApplicationContext(), apiKey);
         }
         BottomNavigationView navigation = findViewById(R.id.navigation);

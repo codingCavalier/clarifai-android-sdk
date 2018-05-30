@@ -17,9 +17,6 @@ android {
         }
     }
     buildToolsVersion '27.0.3'
-    dexOptions {
-        incremental true
-    }
 }
 
 repositories{
@@ -34,8 +31,8 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation 'com.android.support:support-v4:27.1.1'
+    implementation (name:'clarifai-android-sdk', ext:'aar')
     testImplementation 'junit:junit:4.12'
-    implementation 'com.clarifai.sdk:clarifaisdk-1.0.8.internal@aar'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
