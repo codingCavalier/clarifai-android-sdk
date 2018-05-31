@@ -9,4 +9,9 @@
     <string name="predict">Predict</string>
     <string name="image_content_description">Sample image for prediction</string>
     <string name="api_key">ENTER YOUR API KEYx</string>
+    <string name="minimize">Minimize</string>
+    <string name="output">Output</string>
+    <string name="take_picture">Take picture</string>
+    <string name="select_picture">Select Picture</string>
+    <string name="select_model">Select Model:</string>
 </resources>
