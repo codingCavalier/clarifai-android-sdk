@@ -3,88 +3,159 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:scrollbars="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main_scrollview"
+    android:fillViewport="true"
+    android:scrollbars="vertical">
     <android.support.constraint.ConstraintLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context=".PredictFragment">
 
-
-        <RadioGroup
-            android:id="@+id/model_group"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/models_ll"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_weight="1"
-            app:layout_constraintHorizontal_weight="1"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toStartOf="@id/predict_button"
-            app:layout_constraintStart_toStartOf="@id/image_view"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <android.support.v7.widget.AppCompatRadioButton
-                android:id="@+id/general_button"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Select Model: "/>
+            <RadioGroup
+                android:id="@+id/model_group"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                app:layout_constraintHorizontal_weight="1">
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/general_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/colorPrimary"
+                    android:checked="true"
+                    android:text="@string/general_model" />
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/custom_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/colorPrimary"
+                    android:checked="false"
+                    android:text="@string/custom_model" />
+
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/buttons_ll2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@id/models_ll"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/models_ll">
+            <Button
+                android:id="@+id/select_picture_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:checked="true"
-                android:text="@string/general_model"
-                android:buttonTint="@color/colorPrimary"/>
+                android:text="Select Picture" />
 
-            <android.support.v7.widget.AppCompatRadioButton
-                android:id="@+id/custom_button"
+            <Button
+                android:id="@+id/take_picture_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:buttonTint="@color/colorPrimary"
-                android:checked="false"
-                android:text="@string/custom_model"/>
+                android:text="Take picture" />
+        </LinearLayout>
 
-        </RadioGroup>
 
-        <Button
-            android:id="@+id/predict_button"
-            android:text="@string/predict"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/buttons_ll"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@id/model_group"
-            app:layout_constraintTop_toTopOf="@id/model_group"
-            app:layout_constraintBottom_toBottomOf="@id/model_group"
-            app:layout_constraintEnd_toEndOf="@id/image_view"
-            android:background="@color/colorPrimary"
-            style="@style/Base.Widget.AppCompat.Button.Colored"/>
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttons_ll2">
 
-        <TextView
-            android:id="@+id/status_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/model_group"
-            app:layout_constraintStart_toStartOf="@id/model_group"
-            app:layout_constraintEnd_toEndOf="@id/predict_button"
-            android:gravity="start"
-            />
+            <Button
+                android:id="@+id/predict_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Predict" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/image_view"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@mipmap/predict_image"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="80dp"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/status_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttons_ll"
+            android:adjustViewBounds="true"
             android:contentDescription="@string/image_content_description" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_corner"
+            android:elevation="2dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textSize="16sp"
+            android:paddingTop="8dp"
+            android:textColor="#111111"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/image_view">
+            <TextView
+                android:id="@+id/output_area_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="2dp"
+                android:textSize="16sp"
+                android:maxLines="15"
+                android:scrollbars="vertical"
+                android:text="Output" />
+            <Button
+                android:id="@+id/minimize_results_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="Minimize"
+                android:textSize="12sp"/>
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/progress_bar_spinner"
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:indeterminate="true"
-            android:visibility="gone"
+            style="?android:attr/progressBarStyleLarge"
             android:layout_width="50dp"
             android:layout_height="41dp"
             android:layout_centerHorizontal="true"
@@ -92,33 +163,82 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image_view"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttons_ll" />
+
+        <!--<Button-->
+            <!--android:id="@+id/predict_button"-->
+            <!--android:text="@string/predict"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:layout_constraintHorizontal_weight="1"-->
+            <!--app:layout_constraintStart_toEndOf="@id/model_group"-->
+            <!--app:layout_constraintTop_toTopOf="@id/model_group"-->
+            <!--app:layout_constraintBottom_toBottomOf="@id/model_group"-->
+            <!--app:layout_constraintEnd_toEndOf="@id/image_view"-->
+            <!--android:background="@color/colorPrimary"-->
+            <!--style="@style/Base.Widget.AppCompat.Button.Colored"/>-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/status_text"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:layout_constraintTop_toBottomOf="@id/model_group"-->
+            <!--app:layout_constraintStart_toStartOf="@id/model_group"-->
+            <!--app:layout_constraintEnd_toEndOf="@id/predict_button"-->
+            <!--android:gravity="start"-->
+            <!--/>-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/image_view"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@mipmap/predict_image"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@id/status_text"-->
+            <!--android:contentDescription="@string/image_content_description" />-->
 
 
-        <LinearLayout
-            android:id="@+id/linear_layout_concepts"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@id/image_view"
-            app:layout_constraintEnd_toStartOf="@id/linear_layout_scores"
-            app:layout_constraintTop_toBottomOf="@id/image_view">
-        </LinearLayout>
+        <!--<ProgressBar-->
+            <!--android:id="@+id/progress_bar_spinner"-->
+            <!--style="@style/Widget.AppCompat.ProgressBar"-->
+            <!--android:indeterminate="true"-->
+            <!--android:visibility="gone"-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="41dp"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_marginEnd="8dp"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@id/image_view"-->
+            <!--app:layout_constraintStart_toStartOf="parent"/>-->
 
-        <LinearLayout
-            android:id="@+id/linear_layout_scores"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/image_view"
-            app:layout_constraintStart_toEndOf="@id/linear_layout_concepts"
-            app:layout_constraintTop_toBottomOf="@id/image_view">
-        </LinearLayout>
+
+        <!--<LinearLayout-->
+            <!--android:id="@+id/linear_layout_concepts"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical"-->
+            <!--app:layout_constraintHorizontal_weight="1"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="@id/image_view"-->
+            <!--app:layout_constraintEnd_toStartOf="@id/linear_layout_scores"-->
+            <!--app:layout_constraintTop_toBottomOf="@id/image_view">-->
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:id="@+id/linear_layout_scores"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical"-->
+            <!--app:layout_constraintHorizontal_weight="1"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintEnd_toEndOf="@id/image_view"-->
+            <!--app:layout_constraintStart_toEndOf="@id/linear_layout_concepts"-->
+            <!--app:layout_constraintTop_toBottomOf="@id/image_view">-->
+        <!--</LinearLayout>-->
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-path name="neutron_images" path="Android/data/com.clarifai.android.neutron/files/Pictures" />
+    <external-files-path name="external_neutron_images" path="Android/data/com.clarifai.android.neutron/files/Pictures" />
+    <files-path name="internal" path="." />
+</paths>
