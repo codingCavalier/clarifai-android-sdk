@@ -14,12 +14,18 @@ Clarifai Android SDK supports applications running on Android API 21 (Version 5.
 
 ### Git LFS
 
-Before we proceed with the installation, please make sure you have Git-LFS installed on your system. The binary contained in the framework is managed by GitHub using `git-lfs`.
+Before doing anything else, please make sure you have Git-LFS installed on your system. The binary contained in the framework is managed by GitHub using `git-lfs`.
 
-If you don't have it installed yet, you can find details at: [https://git-lfs.github.com](https://git-lfs.github.com)
+If you don't have it installed yet, you can find details at: [https://git-lfs.github.com](https://git-lfs.github.com). IF YOU DON'T HAVE GIT-LFS INSTALLED, THE SDK WILL **NOT** WORK. 
+
+### Verifying the SDK
+
+After setting up Git LFS, please ensure that the SDK cloned correctly, by checking the size of the *.aar. If the size is less than ~120MB, then you will need to re-pull master now that Git LFS is set up. 
+
+If you downloaded a ZIP of the project via the "Clone or download" button, the SDK **will be cloned incorrectly**. Either clone the repo with git, or download the *.aar file specifically by clicking on the file through GitHub, and clicking the "Download" button.
 
 ### Install the SDK with an *.aar
-Much of the Android SDK is built with Kotlin. As such, add the following to the project-level `build.gradle`:
+Much of the Android SDK is built with Kotlin. As such, add the following to the **project-level** `build.gradle`:
 
 ```gradle
 buildscript {
@@ -33,7 +39,9 @@ buildscript {
 }
 ```
 
-Next, place the `*.aar` file into the modules's `libs` folder of your application, creating one if necessary. In the app-level `build.gradle` file, add the following dependencies:
+Next, place the `*.aar` file into the modules's `libs` folder of your application, creating one if necessary. 
+
+In the **app-level** `build.gradle` file, add the following:
 
 ```gradle
 repositories {
